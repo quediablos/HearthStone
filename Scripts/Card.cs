@@ -11,6 +11,5 @@ namespace HearthStone
             this.manaCost = manaCost;
         }
 
-
     }
 }

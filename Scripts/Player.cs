@@ -3,23 +3,27 @@ using UnityEngine;
 
 namespace HearthStone
 {
+    /// <summary>
+    /// Represents a player.
+    /// </summary>
     public class Player
     {
         private static int MAX_MANA = 10;
-        private static int SIZE_HAND = 5;
+        public static int SIZE_HAND = 5;
 
         public int health;
         public int mana;
         public Deck deck;
         public List<Card> hand;
 
-        public void onBirth()
+       
+        public Player()
         {
             health = 30;
             mana = 0;
 
             deck = Deck.createUponStart();
-            hand.AddRange(deck.withdrawCards(3));
+            (hand = new List<Card>(SIZE_HAND)).AddRange(deck.withdrawCards(3));
         }
 
         /// <summary>
@@ -72,7 +76,8 @@ namespace HearthStone
             else if (hand.Count < SIZE_HAND)
             {
                 hand.Add(cardFromDeck);
-            } 
+            }
+            
         }
 
         public int takeDamage(int damage)
@@ -80,6 +85,23 @@ namespace HearthStone
             return health -= damage;
         }
 
+        public bool canUseCard(Card card)
+        {
+            return mana >= card.manaCost;
+        }
+
+        public void useCard(Player opponent, Card card)
+        {
+            opponent.takeDamage(card.manaCost);
+
+            hand.Remove(card);
+            mana -= card.manaCost;
+        }
+
+        public bool isAlive()
+        {
+            return health > 0;
+        }
 
     }
 }
